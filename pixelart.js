@@ -14,9 +14,14 @@ const button = document.createElement("button");
 
 const colorButton = document.createElement("button");
 
+const colorInput = document.createElement("input");
+
+const gridSizeInput = document.createElement("input");
+
 //// GLOBAL VAR
 
-let activeColor = "#FFFFFF";
+let activeColor = "#000000";
+let currentSquareColor = "#000000"
 
 //// FUNCTIONS ////
 
@@ -36,6 +41,7 @@ function setElementProperties(){
     //assign properties to square
     square.classList.add('square');
     square.textContent = '';
+    square.style.backgroundColor = "white";
     square.style.aspectRatio = "1 / 1"; 
     square.style.width = "2vh"; 
     square.style.borderWidth = "1px";
@@ -65,6 +71,15 @@ function setElementProperties(){
     colorButton.style.margin = "10px";
     colorButton.style.padding = "10px";
     colorButton.style.alignSelf = "flex-start";
+
+    gridSizeInput.type = "number";
+    gridSizeInput.value = "16";
+    gridSizeInput.style.backgroundColor = "white";
+    gridSizeInput.style.color = "black";
+    gridSizeInput.style.width = "40px";
+
+    colorInput.type = "color";
+    colorInput.value = activeColor;
 }
 
 // createGrid(n) 
@@ -96,14 +111,11 @@ function destroyGrid(){
 function createGridButton(){
     body.appendChild(button);
 
-    button.addEventListener('click', () => {
-        console.log("Button clicked.");
-        
-        let newGridSize = prompt("Enter a new grid size (n x n). n: ");
-        
+    button.addEventListener('click', () => {      
         destroyGrid();
-        
-        createGrid(newGridSize);
+        createGrid(gridSizeInput.value);
+
+        //need to add conditionals for null, negatives and values that are too large
     });
 }
 
@@ -121,17 +133,39 @@ function createColorButton(){
     });
 }
 
+function createColorInput(){
+    body.appendChild(colorInput);
+}
+
+function createGridSizeInput(){
+    body.appendChild(gridSizeInput);
+
+}
+
 // applyListeners()
 /// adds mouse event listeners to squares for hover and drawing effects
 function applyListeners(){
     const squares = document.querySelectorAll('.square');
 
+    // squares.forEach((square) => {
+    //     square.addEventListener('mouseenter', () => {
+    //         currentSquareColor = square.style.backgroundColor;
+    //         square.style.backgroundColor = '#0000FF';
+    //     });
+    //     square.addEventListener('mousedown', () => {
+    //         currentSquareColor = colorInput.value;
+    //     });
+    //     square.addEventListener('mouseleave', () => {
+    //         square.style.backgroundColor = currentSquareColor;
+    //     });
+    // });
     squares.forEach((square) => {
         square.addEventListener('mouseenter', () => {
-            square.style.background = 'blue';
+            square.style.backgroundColor = '#0000FF';
         });
+
         square.addEventListener('mouseleave', () => {
-            square.style.background = activeColor;
+            square.style.backgroundColor = colorInput.value;
         });
     });
 }
@@ -141,25 +175,15 @@ function applyListeners(){
 //set element properties
 setElementProperties();
 
+//TODO: create one function that creates the whole UI instead of these individual functions
+createGridSizeInput();
 //create button
 createGridButton();
 
-createColorButton();
+createColorInput();
 
 //add container div
 body.appendChild(container);
 
 //create a 32 x 32 grid
 createGrid(32,32);
-
-
-
-
-
-
-
-
-
-
-
-
